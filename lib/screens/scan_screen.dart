@@ -167,7 +167,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   Iterable<Widget> _buildScanResultTiles() {
     return _scanResults
-        .where((r) => r.device.platformName.startsWith("ESP"))
+        // .where((r) => r.device.platformName.startsWith("ESP"))
         .map((r) =>
             ScanResultTile(result: r, onTap: () => onConnectPressed(r.device)));
   }

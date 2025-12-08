@@ -38,6 +38,12 @@ dependencies:
 
   flutter_colorpicker: ^1.1.0
 
+  http: ^1.6.0
+  json_annotation: ^4.9.0
+  provider: ^6.0.5  # 状态管理
+  shared_preferences: ^2.2.2  # 本地存储主题偏好
+  get: ^4.6.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

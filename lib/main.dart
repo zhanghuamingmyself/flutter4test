@@ -5,14 +5,31 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter4test/routers/index.dart';
+import 'package:flutter4test/screens/home_page.dart';
+import 'package:flutter4test/theme/app_theme.dart';
+import 'package:flutter4test/theme/theme_provider.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/bluetooth_off_screen.dart';
 import 'screens/scan_screen.dart';
 
-void main() {
+void main() async {
   FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
-  runApp(const FlutterBlueApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 初始化共享偏好设置
+  await SharedPreferences.getInstance();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const FlutterBlueApp(),
+    ),
+  );
 }
 
 //
@@ -34,12 +51,13 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   @override
   void initState() {
     super.initState();
-    _adapterStateStateSubscription = FlutterBluePlus.adapterState.listen((state) {
-      _adapterState = state;
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    _adapterStateStateSubscription =
+        FlutterBluePlus.adapterState.listen((state) {
+          _adapterState = state;
+          if (mounted) {
+            setState(() {});
+          }
+        });
   }
 
   @override
@@ -51,13 +69,21 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   @override
   Widget build(BuildContext context) {
     Widget screen = _adapterState == BluetoothAdapterState.on
-        ? const ScanScreen()
+        ? const MyHomePage(title: "Bluetooth 4 Test")
         : BluetoothOffScreen(adapterState: _adapterState);
 
-    return MaterialApp(
-      color: Colors.lightBlue,
-      home: screen,
-      navigatorObservers: [BluetoothAdapterStateObserver()],
+    return Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return GetMaterialApp(
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.themeMode,
+            debugShowCheckedModeBanner: false,
+            getPages: AppPage.routes,
+            home: screen,
+            navigatorObservers: [BluetoothAdapterStateObserver()],
+          );
+        }
     );
   }
 }
@@ -73,12 +99,13 @@ class BluetoothAdapterStateObserver extends NavigatorObserver {
     super.didPush(route, previousRoute);
     if (route.settings.name == '/DeviceScreen') {
       // Start listening to Bluetooth state changes when a new route is pushed
-      _adapterStateSubscription ??= FlutterBluePlus.adapterState.listen((state) {
-        if (state != BluetoothAdapterState.on) {
-          // Pop the current route if Bluetooth is off
-          navigator?.pop();
-        }
-      });
+      _adapterStateSubscription ??=
+          FlutterBluePlus.adapterState.listen((state) {
+            if (state != BluetoothAdapterState.on) {
+              // Pop the current route if Bluetooth is off
+              navigator?.pop();
+            }
+          });
     }
   }
 

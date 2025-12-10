@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ? const HomeScreen()
             : _tab_index == 1
                 ? const DeviceListScreen()
-                : const MyScreen(),
+                : const AdvancedWebView("https://www.baidu.com"),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _tab_index,
@@ -115,36 +115,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class MyScreen extends StatelessWidget {
-  const MyScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
-        elevation: 0,
-        actions: const [
-          ThemeToggleButton(),
-          SizedBox(width: 8),
-        ],
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(' MyScreen'),
-      ),
-      body: const Center(
-        child: Text("My Screen"),
-      ),
-    );
-  }
-}
 
 class DeviceListScreen extends StatefulWidget {
   const DeviceListScreen({super.key});

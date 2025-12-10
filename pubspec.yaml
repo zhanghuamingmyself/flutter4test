@@ -43,6 +43,8 @@ dependencies:
   provider: ^6.0.5  # 状态管理
   shared_preferences: ^2.2.2  # 本地存储主题偏好
   get: ^4.6.5
+  dio: ^5.3.3
+  webview_flutter: ^4.13.0
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/html/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
